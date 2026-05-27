@@ -3198,6 +3198,381 @@ missing_is_prev_preg_filled AS (
 ),
 
 
+missing_is_cardiac_before_preg AS (
+  -- Missing is_cardiac_before_preg
+  SELECT
+    record_id,
+    datetime_entry,
+    'is_cardiac_before_preg' AS variable,
+    'Missing is_cardiac_before_preg' AS issue,
+    is_cardiac_before_preg AS current_value
+  FROM maternal_core
+  WHERE (is_cardiac_before_preg IS NULL OR TRIM(is_cardiac_before_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+
+missing_is_cardiac_during_preg AS (
+  -- Missing is_cardiac_during_preg
+  SELECT
+    record_id,
+    datetime_entry,
+    'is_cardiac_during_preg' AS variable,
+    'Missing is_cardiac_during_preg' AS issue,
+    is_cardiac_during_preg AS current_value
+  FROM maternal_core
+  WHERE (is_cardiac_during_preg IS NULL OR TRIM(is_cardiac_during_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+
+missing_is_cardiac_during_itp AS (
+  -- Missing is_cardiac_during_itp
+  SELECT
+    record_id,
+    datetime_entry,
+    'is_cardiac_during_itp' AS variable,
+    'Missing is_cardiac_during_itp' AS issue,
+    is_cardiac_during_itp AS current_value
+  FROM maternal_core
+  WHERE (is_cardiac_during_itp IS NULL OR TRIM(is_cardiac_during_itp) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_cardiac_during_post_del AS (
+  -- Missing is_cardiac_during_post_del
+  SELECT
+    record_id,
+    datetime_entry,
+    'is_cardiac_during_post_del' AS variable,
+    'Missing is_cardiac_during_post_del' AS issue,
+    is_cardiac_during_post_del AS current_value
+  FROM maternal_core
+  WHERE (is_cardiac_during_post_del IS NULL OR TRIM(is_cardiac_during_post_del) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+
+-- Hypertension Section
+missing_is_htn_before_preg AS (
+  SELECT record_id, datetime_entry, 'is_htn_before_preg' AS variable, 'Missing is_htn_before_preg' AS issue, is_htn_before_preg AS current_value
+  FROM maternal_core
+  WHERE (is_htn_before_preg IS NULL OR TRIM(is_htn_before_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_htn_during_preg AS (
+  SELECT record_id, datetime_entry, 'is_htn_during_preg' AS variable, 'Missing is_htn_during_preg' AS issue, is_htn_during_preg AS current_value
+  FROM maternal_core
+  WHERE (is_htn_during_preg IS NULL OR TRIM(is_htn_during_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_htn_during_itp AS (
+  SELECT record_id, datetime_entry, 'is_htn_during_itp' AS variable, 'Missing is_htn_during_itp' AS issue, is_htn_during_itp AS current_value
+  FROM maternal_core
+  WHERE (is_htn_during_itp IS NULL OR TRIM(is_htn_during_itp) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_htn_during_post_del AS (
+  SELECT record_id, datetime_entry, 'is_htn_during_post_del' AS variable, 'Missing is_htn_during_post_del' AS issue, is_htn_during_post_del AS current_value
+  FROM maternal_core
+  WHERE (is_htn_during_post_del IS NULL OR TRIM(is_htn_during_post_del) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+-- Respiratory Section
+missing_is_asthma_before_preg AS (
+  SELECT record_id, datetime_entry, 'is_asthma_before_preg' AS variable, 'Missing is_asthma_before_preg' AS issue, is_asthma_before_preg AS current_value
+  FROM maternal_core
+  WHERE (is_asthma_before_preg IS NULL OR TRIM(is_asthma_before_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_asthma_during_preg AS (
+  SELECT record_id, datetime_entry, 'is_asthma_during_preg' AS variable, 'Missing is_asthma_during_preg' AS issue, is_asthma_during_preg AS current_value
+  FROM maternal_core
+  WHERE (is_asthma_during_preg IS NULL OR TRIM(is_asthma_during_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_asthma_during_ipt AS (
+  SELECT record_id, datetime_entry, 'is_asthma_during_ipt' AS variable, 'Missing is_asthma_during_ipt' AS issue, is_asthma_during_ipt AS current_value
+  FROM maternal_core
+  WHERE (is_asthma_during_ipt IS NULL OR TRIM(is_asthma_during_ipt) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_asthma_during_post_del AS (
+  SELECT record_id, datetime_entry, 'is_asthma_during_post_del' AS variable, 'Missing is_asthma_during_post_del' AS issue, is_asthma_during_post_del AS current_value
+  FROM maternal_core
+  WHERE (is_asthma_during_post_del IS NULL OR TRIM(is_asthma_during_post_del) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+-- Epilepsy Section
+missing_is_epilepsy_before_preg AS (
+  SELECT record_id, datetime_entry, 'is_epilepsy_before_preg' AS variable, 'Missing is_epilepsy_before_preg' AS issue, is_epilepsy_before_preg AS current_value
+  FROM maternal_core
+  WHERE (is_epilepsy_before_preg IS NULL OR TRIM(is_epilepsy_before_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_epilepsy_during_preg AS (
+  SELECT record_id, datetime_entry, 'is_epilepsy_during_preg' AS variable, 'Missing is_epilepsy_during_preg' AS issue, is_epilepsy_during_preg AS current_value
+  FROM maternal_core
+  WHERE (is_epilepsy_during_preg IS NULL OR TRIM(is_epilepsy_during_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_epilepsy_during_itp AS (
+  SELECT record_id, datetime_entry, 'is_epilepsy_during_itp' AS variable, 'Missing is_epilepsy_during_itp' AS issue, is_epilepsy_during_itp AS current_value
+  FROM maternal_core
+  WHERE (is_epilepsy_during_itp IS NULL OR TRIM(is_epilepsy_during_itp) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_epilepsy_post_del AS (
+  SELECT record_id, datetime_entry, 'is_epilepsy_post_del' AS variable, 'Missing is_epilepsy_post_del' AS issue, is_epilepsy_post_del AS current_value
+  FROM maternal_core
+  WHERE (is_epilepsy_post_del IS NULL OR TRIM(is_epilepsy_post_del) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+-- Endocrine - Diabetes Section
+missing_is_diabetes_before_preg AS (
+  SELECT record_id, datetime_entry, 'is_diabetes_before_preg' AS variable, 'Missing is_diabetes_before_preg' AS issue, is_diabetes_before_preg AS current_value
+  FROM maternal_core
+  WHERE (is_diabetes_before_preg IS NULL OR TRIM(is_diabetes_before_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_diabetes_during_preg AS (
+  SELECT record_id, datetime_entry, 'is_diabetes_during_preg' AS variable, 'Missing is_diabetes_during_preg' AS issue, is_diabetes_during_preg AS current_value
+  FROM maternal_core
+  WHERE (is_diabetes_during_preg IS NULL OR TRIM(is_diabetes_during_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_diabetes_during_itp AS (
+  SELECT record_id, datetime_entry, 'is_diabetes_during_itp' AS variable, 'Missing is_diabetes_during_itp' AS issue, is_diabetes_during_itp AS current_value
+  FROM maternal_core
+  WHERE (is_diabetes_during_itp IS NULL OR TRIM(is_diabetes_during_itp) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_diabetes_post_del AS (
+  SELECT record_id, datetime_entry, 'is_diabetes_post_del' AS variable, 'Missing is_diabetes_post_del' AS issue, is_diabetes_post_del AS current_value
+  FROM maternal_core
+  WHERE (is_diabetes_post_del IS NULL OR TRIM(is_diabetes_post_del) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+-- Endocrine - Thyroid Section
+missing_is_thyroid_before_preg AS (
+  SELECT record_id, datetime_entry, 'is_thyroid_before_preg' AS variable, 'Missing is_thyroid_before_preg' AS issue, is_thyroid_before_preg AS current_value
+  FROM maternal_core
+  WHERE (is_thyroid_before_preg IS NULL OR TRIM(is_thyroid_before_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_thyroid_during_preg AS (
+  SELECT record_id, datetime_entry, 'is_thyroid_during_preg' AS variable, 'Missing is_thyroid_during_preg' AS issue, is_thyroid_during_preg AS current_value
+  FROM maternal_core
+  WHERE (is_thyroid_during_preg IS NULL OR TRIM(is_thyroid_during_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_thyroid_during_itp AS (
+  SELECT record_id, datetime_entry, 'is_thyroid_during_itp' AS variable, 'Missing is_thyroid_during_itp' AS issue, is_thyroid_during_itp AS current_value
+  FROM maternal_core
+  WHERE (is_thyroid_during_itp IS NULL OR TRIM(is_thyroid_during_itp) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_thyroid_post_del AS (
+  SELECT record_id, datetime_entry, 'is_thyroid_post_del' AS variable, 'Missing is_thyroid_post_del' AS issue, is_thyroid_post_del AS current_value
+  FROM maternal_core
+  WHERE (is_thyroid_post_del IS NULL OR TRIM(is_thyroid_post_del) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+-- Infection - STI Section
+missing_is_sti_before_preg AS (
+  SELECT record_id, datetime_entry, 'is_sti_before_preg' AS variable, 'Missing is_sti_before_preg' AS issue, is_sti_before_preg AS current_value
+  FROM maternal_core
+  WHERE (is_sti_before_preg IS NULL OR TRIM(is_sti_before_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_sti_during_preg AS (
+  SELECT record_id, datetime_entry, 'is_sti_during_preg' AS variable, 'Missing is_sti_during_preg' AS issue, is_sti_during_preg AS current_value
+  FROM maternal_core
+  WHERE (is_sti_during_preg IS NULL OR TRIM(is_sti_during_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_sti_during_itp AS (
+  SELECT record_id, datetime_entry, 'is_sti_during_itp' AS variable, 'Missing is_sti_during_itp' AS issue, is_sti_during_itp AS current_value
+  FROM maternal_core
+  WHERE (is_sti_during_itp IS NULL OR TRIM(is_sti_during_itp) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_sti_post_del AS (
+  SELECT record_id, datetime_entry, 'is_sti_post_del' AS variable, 'Missing is_sti_post_del' AS issue, is_sti_post_del AS current_value
+  FROM maternal_core
+  WHERE (is_sti_post_del IS NULL OR TRIM(is_sti_post_del) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+-- Renal Section
+missing_is_renal_before_preg AS (
+  SELECT record_id, datetime_entry, 'is_renal_before_preg' AS variable, 'Missing is_renal_before_preg' AS issue, is_renal_before_preg AS current_value
+  FROM maternal_core
+  WHERE (is_renal_before_preg IS NULL OR TRIM(is_renal_before_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_renal_during_preg AS (
+  SELECT record_id, datetime_entry, 'is_renal_during_preg' AS variable, 'Missing is_renal_during_preg' AS issue, is_renal_during_preg AS current_value
+  FROM maternal_core
+  WHERE (is_renal_during_preg IS NULL OR TRIM(is_renal_during_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_renal_during_itp AS (
+  SELECT record_id, datetime_entry, 'is_renal_during_itp' AS variable, 'Missing is_renal_during_itp' AS issue, is_renal_during_itp AS current_value
+  FROM maternal_core
+  WHERE (is_renal_during_itp IS NULL OR TRIM(is_renal_during_itp) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_renal_post_del AS (
+  SELECT record_id, datetime_entry, 'is_renal_post_del' AS variable, 'Missing is_renal_post_del' AS issue, is_renal_post_del AS current_value
+  FROM maternal_core
+  WHERE (is_renal_post_del IS NULL OR TRIM(is_renal_post_del) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+-- Haematology - Sickle Cell Section
+missing_is_sickle_before_preg AS (
+  SELECT record_id, datetime_entry, 'is_sickle_before_preg' AS variable, 'Missing is_sickle_before_preg' AS issue, is_sickle_before_preg AS current_value
+  FROM maternal_core
+  WHERE (is_sickle_before_preg IS NULL OR TRIM(is_sickle_before_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_sickle_during_preg AS (
+  SELECT record_id, datetime_entry, 'is_sickle_during_preg' AS variable, 'Missing is_sickle_during_preg' AS issue, is_sickle_during_preg AS current_value
+  FROM maternal_core
+  WHERE (is_sickle_during_preg IS NULL OR TRIM(is_sickle_during_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_sickle_during_itp AS (
+  SELECT record_id, datetime_entry, 'is_sickle_during_itp' AS variable, 'Missing is_sickle_during_itp' AS issue, is_sickle_during_itp AS current_value
+  FROM maternal_core
+  WHERE (is_sickle_during_itp IS NULL OR TRIM(is_sickle_during_itp) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_sickle_post_del AS (
+  SELECT record_id, datetime_entry, 'is_sickle_post_del' AS variable, 'Missing is_sickle_post_del' AS issue, is_sickle_post_del AS current_value
+  FROM maternal_core
+  WHERE (is_sickle_post_del IS NULL OR TRIM(is_sickle_post_del) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+-- Neoplasia - Cervical Cancer Section
+missing_is_cervical_before_preg AS (
+  SELECT record_id, datetime_entry, 'is_cervical_before_preg' AS variable, 'Missing is_cervical_before_preg' AS issue, is_cervical_before_preg AS current_value
+  FROM maternal_core
+  WHERE (is_cervical_before_preg IS NULL OR TRIM(is_cervical_before_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_cervical_during_preg AS (
+  SELECT record_id, datetime_entry, 'is_cervical_during_preg' AS variable, 'Missing is_cervical_during_preg' AS issue, is_cervical_during_preg AS current_value
+  FROM maternal_core
+  WHERE (is_cervical_during_preg IS NULL OR TRIM(is_cervical_during_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_cervical_during_itp AS (
+  SELECT record_id, datetime_entry, 'is_cervical_during_itp' AS variable, 'Missing is_cervical_during_itp' AS issue, is_cervical_during_itp AS current_value
+  FROM maternal_core
+  WHERE (is_cervical_during_itp IS NULL OR TRIM(is_cervical_during_itp) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_cervical_post_del AS (
+  SELECT record_id, datetime_entry, 'is_cervical_post_del' AS variable, 'Missing is_cervical_post_del' AS issue, is_cervical_post_del AS current_value
+  FROM maternal_core
+  WHERE (is_cervical_post_del IS NULL OR TRIM(is_cervical_post_del) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+-- Neoplasia - Breast Cancer Section
+missing_is_breast_before_preg AS (
+  SELECT record_id, datetime_entry, 'is_breast_before_preg' AS variable, 'Missing is_breast_before_preg' AS issue, is_breast_before_preg AS current_value
+  FROM maternal_core
+  WHERE (is_breast_before_preg IS NULL OR TRIM(is_breast_before_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_breast_during_preg AS (
+  SELECT record_id, datetime_entry, 'is_breast_during_preg' AS variable, 'Missing is_breast_during_preg' AS issue, is_breast_during_preg AS current_value
+  FROM maternal_core
+  WHERE (is_breast_during_preg IS NULL OR TRIM(is_breast_during_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_breast_during_itp AS (
+  SELECT record_id, datetime_entry, 'is_breast_during_itp' AS variable, 'Missing is_breast_during_itp' AS issue, is_breast_during_itp AS current_value
+  FROM maternal_core
+  WHERE (is_breast_during_itp IS NULL OR TRIM(is_breast_during_itp) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_breast_post_del AS (
+  SELECT record_id, datetime_entry, 'is_breast_post_del' AS variable, 'Missing is_breast_post_del' AS issue, is_breast_post_del AS current_value
+  FROM maternal_core
+  WHERE (is_breast_post_del IS NULL OR TRIM(is_breast_post_del) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+-- Mental Illness - Depression Section
+missing_is_depression_before_preg AS (
+  SELECT record_id, datetime_entry, 'is_depression_before_preg' AS variable, 'Missing is_depression_before_preg' AS issue, is_depression_before_preg AS current_value
+  FROM maternal_core
+  WHERE (is_depression_before_preg IS NULL OR TRIM(is_depression_before_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_depression_during_preg AS (
+  SELECT record_id, datetime_entry, 'is_depression_during_preg' AS variable, 'Missing is_depression_during_preg' AS issue, is_depression_during_preg AS current_value
+  FROM maternal_core
+  WHERE (is_depression_during_preg IS NULL OR TRIM(is_depression_during_preg) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_depression_during_itp AS (
+  SELECT record_id, datetime_entry, 'is_depression_during_itp' AS variable, 'Missing is_depression_during_itp' AS issue, is_depression_during_itp AS current_value
+  FROM maternal_core
+  WHERE (is_depression_during_itp IS NULL OR TRIM(is_depression_during_itp) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+missing_is_depression_post_del AS (
+  SELECT record_id, datetime_entry, 'is_depression_post_del' AS variable, 'Missing is_depression_post_del' AS issue, is_depression_post_del AS current_value
+  FROM maternal_core
+  WHERE (is_depression_post_del IS NULL OR TRIM(is_depression_post_del) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-09 08:32:44'
+),
+
+
 
 
 
@@ -3638,6 +4013,102 @@ missing_is_prev_preg_filled AS (
     SELECT * FROM invalid_count_living_children
     UNION ALL
     SELECT * FROM missing_is_prev_preg_filled
+    UNION ALL
+    SELECT * FROM missing_is_cardiac_before_preg
+    UNION ALL
+    SELECT * FROM missing_is_cardiac_during_preg
+    UNION ALL
+    SELECT * FROM missing_is_cardiac_during_itp
+    UNION ALL
+    SELECT * FROM missing_is_cardiac_during_post_del
+    UNION ALL
+    SELECT * FROM missing_is_htn_before_preg
+    UNION ALL
+    SELECT * FROM missing_is_htn_during_preg
+    UNION ALL
+    SELECT * FROM missing_is_htn_during_itp
+    UNION ALL
+    SELECT * FROM missing_is_htn_during_post_del
+    UNION ALL
+    SELECT * FROM missing_is_asthma_before_preg
+    UNION ALL
+    SELECT * FROM missing_is_asthma_during_preg
+    UNION ALL
+    SELECT * FROM missing_is_asthma_during_ipt
+    UNION ALL
+    SELECT * FROM missing_is_asthma_during_post_del
+    UNION ALL
+    SELECT * FROM missing_is_epilepsy_before_preg
+    UNION ALL
+    SELECT * FROM missing_is_epilepsy_during_preg
+    UNION ALL
+    SELECT * FROM missing_is_epilepsy_during_itp
+    UNION ALL
+    SELECT * FROM missing_is_epilepsy_post_del
+    UNION ALL
+    SELECT * FROM missing_is_diabetes_before_preg
+    UNION ALL
+    SELECT * FROM missing_is_diabetes_during_preg
+    UNION ALL
+    SELECT * FROM missing_is_diabetes_during_itp
+    UNION ALL
+    SELECT * FROM missing_is_diabetes_post_del
+    UNION ALL
+    SELECT * FROM missing_is_thyroid_before_preg
+    UNION ALL
+    SELECT * FROM missing_is_thyroid_during_preg
+    UNION ALL
+    SELECT * FROM missing_is_thyroid_during_itp
+    UNION ALL
+    SELECT * FROM missing_is_thyroid_post_del
+    UNION ALL
+    SELECT * FROM missing_is_sti_before_preg
+    UNION ALL
+    SELECT * FROM missing_is_sti_during_preg
+    UNION ALL
+    SELECT * FROM missing_is_sti_during_itp
+    UNION ALL
+    SELECT * FROM missing_is_sti_post_del
+    UNION ALL
+    SELECT * FROM missing_is_renal_before_preg
+    UNION ALL
+    SELECT * FROM missing_is_renal_during_preg
+    UNION ALL
+    SELECT * FROM missing_is_renal_during_itp
+    UNION ALL
+    SELECT * FROM missing_is_renal_post_del
+    UNION ALL
+    SELECT * FROM missing_is_sickle_before_preg
+    UNION ALL
+    SELECT * FROM missing_is_sickle_during_preg
+    UNION ALL
+    SELECT * FROM missing_is_sickle_during_itp
+    UNION ALL
+    SELECT * FROM missing_is_sickle_post_del
+    UNION ALL
+    SELECT * FROM missing_is_cervical_before_preg
+    UNION ALL
+    SELECT * FROM missing_is_cervical_during_preg
+    UNION ALL
+    SELECT * FROM missing_is_cervical_during_itp
+    UNION ALL
+    SELECT * FROM missing_is_cervical_post_del
+    UNION ALL
+    SELECT * FROM missing_is_breast_before_preg
+    UNION ALL
+    SELECT * FROM missing_is_breast_during_preg
+    UNION ALL
+    SELECT * FROM missing_is_breast_during_itp
+    UNION ALL
+    SELECT * FROM missing_is_breast_post_del
+    UNION ALL
+    SELECT * FROM missing_is_depression_before_preg
+    UNION ALL
+    SELECT * FROM missing_is_depression_during_preg
+    UNION ALL
+    SELECT * FROM missing_is_depression_during_itp
+    UNION ALL
+    SELECT * FROM missing_is_depression_post_del
 
 
 
