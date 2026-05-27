@@ -686,6 +686,7 @@ invalid_adm_temp AS (
   WHERE adm_temp IS NOT NULL
     AND TRIM(adm_temp) != ''
     AND TRIM(adm_temp) != 'NI'
+    AND TRIM(adm_temp) != 'ND'
     AND (
       TRY_CAST(adm_temp AS DOUBLE) IS NULL
       OR TRY_CAST(adm_temp AS DOUBLE) < 30
@@ -1596,6 +1597,7 @@ invalid_mother_weight_kg AS (
   WHERE mother_weight_kg IS NOT NULL
     AND TRIM(mother_weight_kg) != ''
     AND TRIM(mother_weight_kg) != 'NI'
+    AND TRIM(mother_weight_kg) != 'ND'
     AND (
       TRY_CAST(mother_weight_kg AS DOUBLE) IS NULL
       OR TRY_CAST(mother_weight_kg AS DOUBLE) < 30
@@ -1630,6 +1632,7 @@ invalid_mother_height_cm AS (
   WHERE mother_height_cm IS NOT NULL
     AND TRIM(mother_height_cm) != ''
     AND TRIM(mother_height_cm) != 'NI'
+    AND TRIM(mother_height_cm) != 'ND'
     AND (
       TRY_CAST(mother_height_cm AS DOUBLE) IS NULL
       OR TRY_CAST(mother_height_cm AS DOUBLE) < 100
@@ -1664,6 +1667,7 @@ invalid_mother_bmi AS (
   WHERE mother_bmi IS NOT NULL
     AND TRIM(mother_bmi) != ''
     AND TRIM(mother_bmi) != 'NI'
+    AND TRIM(mother_bmi) != 'ND'
     AND (
       TRY_CAST(mother_bmi AS DOUBLE) IS NULL
       OR TRY_CAST(mother_bmi AS DOUBLE) < 12
@@ -1698,6 +1702,7 @@ invalid_muac AS (
   WHERE muac IS NOT NULL
     AND TRIM(muac) != ''
     AND TRIM(muac) != 'NI'
+    AND TRIM(muac) != 'ND'
     AND (
       TRY_CAST(muac AS DOUBLE) IS NULL
       OR TRY_CAST(muac AS DOUBLE) < 10
@@ -2046,19 +2051,19 @@ missing_time_drainage_units AS (
 ),
 
 
-missing_oedema_location_oth AS (
+-- missing_oedema_location_oth AS (
   -- Missing oedema_location_oth (only when oedema_location___999 = '1')
-  SELECT
-    record_id,
-    datetime_entry,
-    'oedema_location_oth' AS variable,
-    'Missing oedema_location_oth (oedema location = Other but no specification)' AS issue,
-    oedema_location_oth AS current_value
-  FROM maternal_core
-  WHERE (oedema_location_oth IS NULL OR TRIM(oedema_location_oth) = '')
-    AND oedema_location___999 = '1'
-    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
-),
+ -- SELECT
+  --  record_id,
+  --  datetime_entry,
+   -- 'oedema_location_oth' AS variable,
+  --  'Missing oedema_location_oth (oedema location = Other but no specification)' AS issue,
+  --  oedema_location_oth AS current_value
+  -- FROM maternal_core
+  -- WHERE (oedema_location_oth IS NULL OR TRIM(oedema_location_oth) = '')
+   -- AND oedema_location___999 = '1'
+   -- AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+-- ),
 
 
 missing_other_complaints_specify AS (
@@ -2074,6 +2079,593 @@ missing_other_complaints_specify AS (
     AND is_other_complaint = '1'
     AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-13 15:57:06'
 ),
+
+
+missing_hb_booking_level AS (
+  -- Missing hb_booking_level
+  SELECT
+    record_id,
+    datetime_entry,
+    'hb_booking_level' AS variable,
+    'Missing hb_booking_level' AS issue,
+    hb_booking_level AS current_value
+  FROM maternal_core
+  WHERE (hb_booking_level IS NULL OR TRIM(hb_booking_level) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+invalid_hb_booking_level AS (
+  -- hb_booking_level out of range (expected 5-20 g/dL)
+  SELECT
+    record_id,
+    datetime_entry,
+    'hb_booking_level' AS variable,
+    'hb_booking_level out of range (expected 5-20 g/dL)' AS issue,
+    hb_booking_level AS current_value
+  FROM maternal_core
+  WHERE hb_booking_level IS NOT NULL
+    AND TRIM(hb_booking_level) != ''
+    AND TRIM(hb_booking_level) != 'NI'
+    AND TRIM(hb_booking_level) != 'ND'
+    AND (
+      TRY_CAST(hb_booking_level AS DOUBLE) IS NULL
+      OR TRY_CAST(hb_booking_level AS DOUBLE) < 5
+      OR TRY_CAST(hb_booking_level AS DOUBLE) > 20
+    )
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+
+missing_date_booking_hb AS (
+  -- Missing date_booking_hb
+  SELECT
+    record_id,
+    datetime_entry,
+    'date_booking_hb' AS variable,
+    'Missing date_booking_hb' AS issue,
+    date_booking_hb AS current_value
+  FROM maternal_core
+  WHERE (date_booking_hb IS NULL OR TRIM(date_booking_hb) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+future_date_booking_hb AS (
+  -- Future date_booking_hb
+  SELECT
+    record_id,
+    datetime_entry,
+    'date_booking_hb' AS variable,
+    'Future date_booking_hb' AS issue,
+    date_booking_hb AS current_value
+  FROM maternal_core
+  WHERE date_booking_hb IS NOT NULL
+    AND TRIM(date_booking_hb) != ''
+    AND TRY_CAST(date_booking_hb AS DATE) > CURRENT_DATE
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+date_booking_hb_after_admission AS (
+  -- date_booking_hb cannot be after admission_date
+  SELECT
+    record_id,
+    datetime_entry,
+    'date_booking_hb' AS variable,
+    'date_booking_hb is after admission_date (booking Hb should be measured before admission)' AS issue,
+    date_booking_hb AS current_value
+  FROM maternal_core
+  WHERE date_booking_hb IS NOT NULL
+    AND TRIM(date_booking_hb) != ''
+    AND admission_date IS NOT NULL
+    AND TRIM(admission_date) != ''
+    AND TRY_CAST(date_booking_hb AS DATE) > TRY_CAST(admission_date AS DATE)
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+
+missing_rbs_current_level AS (
+  -- Missing rbs_current_level
+  SELECT
+    record_id,
+    datetime_entry,
+    'rbs_current_level' AS variable,
+    'Missing rbs_current_level' AS issue,
+    rbs_current_level AS current_value
+  FROM maternal_core
+  WHERE (rbs_current_level IS NULL OR TRIM(rbs_current_level) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+invalid_rbs_current_level AS (
+  -- rbs_current_level out of range (expected 2-30 mmol/L)
+  SELECT
+    record_id,
+    datetime_entry,
+    'rbs_current_level' AS variable,
+    'rbs_current_level out of range (expected 2-30 mmol/L)' AS issue,
+    rbs_current_level AS current_value
+  FROM maternal_core
+  WHERE rbs_current_level IS NOT NULL
+    AND TRIM(rbs_current_level) != ''
+    AND TRIM(rbs_current_level) != 'NI'
+    AND TRIM(rbs_current_level) != 'ND'
+    AND (
+      TRY_CAST(rbs_current_level AS DOUBLE) IS NULL
+      OR TRY_CAST(rbs_current_level AS DOUBLE) < 2
+      OR TRY_CAST(rbs_current_level AS DOUBLE) > 30
+    )
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+missing_platelets_count AS (
+  -- Missing platelets_count
+  SELECT
+    record_id,
+    datetime_entry,
+    'platelets_count' AS variable,
+    'Missing platelets_count' AS issue,
+    platelets_count AS current_value
+  FROM maternal_core
+  WHERE (platelets_count IS NULL OR TRIM(platelets_count) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+invalid_platelets_count AS (
+  -- platelets_count out of range (expected 20-999 x10^9/L)
+  SELECT
+    record_id,
+    datetime_entry,
+    'platelets_count' AS variable,
+    'platelets_count out of range (expected 20-999 x10^9/L)' AS issue,
+    platelets_count AS current_value
+  FROM maternal_core
+  WHERE platelets_count IS NOT NULL
+    AND TRIM(platelets_count) != ''
+    AND TRIM(platelets_count) != 'NI'
+    AND TRIM(platelets_count) != 'ND'
+    AND (
+      TRY_CAST(platelets_count AS INTEGER) IS NULL
+      OR TRY_CAST(platelets_count AS INTEGER) < 20
+      OR TRY_CAST(platelets_count AS INTEGER) > 1000
+    )
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+
+missing_wbc_count AS (
+  -- Missing wbc_count
+  SELECT
+    record_id,
+    datetime_entry,
+    'wbc_count' AS variable,
+    'Missing wbc_count' AS issue,
+    wbc_count AS current_value
+  FROM maternal_core
+  WHERE (wbc_count IS NULL OR TRIM(wbc_count) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+invalid_wbc_count AS (
+  -- wbc_count out of range (expected 2-50 x10^9/L)
+  SELECT
+    record_id,
+    datetime_entry,
+    'wbc_count' AS variable,
+    'wbc_count out of range (expected 2-50 x10^9/L)' AS issue,
+    wbc_count AS current_value
+  FROM maternal_core
+  WHERE wbc_count IS NOT NULL
+    AND TRIM(wbc_count) != ''
+    AND TRIM(wbc_count) != 'NI'
+    AND TRIM(wbc_count) != 'ND'
+    AND (
+      TRY_CAST(wbc_count AS DOUBLE) IS NULL
+      OR TRY_CAST(wbc_count AS DOUBLE) < 2
+      OR TRY_CAST(wbc_count AS DOUBLE) > 50
+    )
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+
+missing_is_malaria_rdt AS (
+  -- Missing is_malaria_rdt
+  SELECT
+    record_id,
+    datetime_entry,
+    'is_malaria_rdt' AS variable,
+    'Missing is_malaria_rdt' AS issue,
+    is_malaria_rdt AS current_value
+  FROM maternal_core
+  WHERE (is_malaria_rdt IS NULL OR TRIM(is_malaria_rdt) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+
+missing_blood_group_gxm AS (
+  -- Missing blood_group_gxm
+  SELECT
+    record_id,
+    datetime_entry,
+    'blood_group_gxm' AS variable,
+    'Missing blood_group_gxm' AS issue,
+    blood_group_gxm AS current_value
+  FROM maternal_core
+  WHERE (blood_group_gxm IS NULL OR TRIM(blood_group_gxm) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+
+missing_blood_group_rh_gxm AS (
+  -- Missing blood_group_rh_gxm
+  SELECT
+    record_id,
+    datetime_entry,
+    'blood_group_rh_gxm' AS variable,
+    'Missing blood_group_rh_gxm' AS issue,
+    blood_group_rh_gxm AS current_value
+  FROM maternal_core
+  WHERE (blood_group_rh_gxm IS NULL OR TRIM(blood_group_rh_gxm) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+
+missing_is_anti_d_given AS (
+  -- Missing is_anti_d_given (only when blood_group_rh_gxm = '0' i.e., Rh negative)
+  SELECT
+    record_id,
+    datetime_entry,
+    'is_anti_d_given' AS variable,
+    'Missing is_anti_d_given (Rhesus negative but Anti D given status not recorded)' AS issue,
+    is_anti_d_given AS current_value
+  FROM maternal_core
+  WHERE (is_anti_d_given IS NULL OR TRIM(is_anti_d_given) = '')
+    AND blood_group_rh_gxm = '0'
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-15 13:52:08'
+),
+
+
+missing_is_hiv_test_done AS (
+  -- Missing is_hiv_test_done
+  SELECT
+    record_id,
+    datetime_entry,
+    'is_hiv_test_done' AS variable,
+    'Missing is_hiv_test_done' AS issue,
+    is_hiv_test_done AS current_value
+  FROM maternal_core
+  WHERE (is_hiv_test_done IS NULL OR TRIM(is_hiv_test_done) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+
+missing_hiv_test_result AS (
+  -- Missing hiv_test_result (only when is_hiv_test_done = '1')
+  SELECT
+    record_id,
+    datetime_entry,
+    'hiv_test_result' AS variable,
+    'Missing hiv_test_result (HIV test done = Yes but no result recorded)' AS issue,
+    hiv_test_result AS current_value
+  FROM maternal_core
+  WHERE (hiv_test_result IS NULL OR TRIM(hiv_test_result) = '')
+    AND is_hiv_test_done = '1'
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+
+missing_date_hiv_test_done AS (
+  -- Missing date_hiv_test_done (only when is_hiv_test_done = '1')
+  SELECT
+    record_id,
+    datetime_entry,
+    'date_hiv_test_done' AS variable,
+    'Missing date_hiv_test_done (HIV test done = Yes but no date recorded)' AS issue,
+    date_hiv_test_done AS current_value
+  FROM maternal_core
+  WHERE (date_hiv_test_done IS NULL OR TRIM(date_hiv_test_done) = '')
+    AND is_hiv_test_done = '1'
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+future_date_hiv_test_done AS (
+  -- Future date_hiv_test_done (only when is_hiv_test_done = '1')
+  SELECT
+    record_id,
+    datetime_entry,
+    'date_hiv_test_done' AS variable,
+    'Future date_hiv_test_done' AS issue,
+    date_hiv_test_done AS current_value
+  FROM maternal_core
+  WHERE date_hiv_test_done IS NOT NULL
+    AND TRIM(date_hiv_test_done) != ''
+    AND is_hiv_test_done = '1'
+    AND TRY_CAST(date_hiv_test_done AS DATE) > CURRENT_DATE
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+
+missing_is_current_hb_done AS (
+  -- Missing is_current_hb_done
+  SELECT
+    record_id,
+    datetime_entry,
+    'is_current_hb_done' AS variable,
+    'Missing is_current_hb_done' AS issue,
+    is_current_hb_done AS current_value
+  FROM maternal_core
+  WHERE (is_current_hb_done IS NULL OR TRIM(is_current_hb_done) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+
+missing_current_hb AS (
+  -- Missing current_hb (only when is_current_hb_done = '1')
+  SELECT
+    record_id,
+    datetime_entry,
+    'current_hb' AS variable,
+    'Missing current_hb (current Hb done = Yes but no value recorded)' AS issue,
+    current_hb AS current_value
+  FROM maternal_core
+  WHERE (current_hb IS NULL OR TRIM(current_hb) = '')
+    AND is_current_hb_done = '1'
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 14:57:54'
+),
+
+invalid_current_hb AS (
+  -- current_hb out of range (expected 5-20 g/dL)
+  SELECT
+    record_id,
+    datetime_entry,
+    'current_hb' AS variable,
+    'current_hb out of range (expected 5-20 g/dL)' AS issue,
+    current_hb AS current_value
+  FROM maternal_core
+  WHERE current_hb IS NOT NULL
+    AND TRIM(current_hb) != ''
+    AND TRIM(current_hb) != 'NI'
+    AND TRIM(current_hb) != 'ND'
+    AND is_current_hb_done = '1'
+    AND (
+      TRY_CAST(current_hb AS DOUBLE) IS NULL
+      OR TRY_CAST(current_hb AS DOUBLE) < 5
+      OR TRY_CAST(current_hb AS DOUBLE) > 20
+    )
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 14:57:54'
+),
+
+
+missing_date_current_hb AS (
+  -- Missing date_current_hb (only when is_current_hb_done = '1')
+  SELECT
+    record_id,
+    datetime_entry,
+    'date_current_hb' AS variable,
+    'Missing date_current_hb (current Hb done = Yes but no date recorded)' AS issue,
+    date_current_hb AS current_value
+  FROM maternal_core
+  WHERE (date_current_hb IS NULL OR TRIM(date_current_hb) = '')
+    AND is_current_hb_done = '1'
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 14:57:54'
+),
+
+future_date_current_hb AS (
+  -- Future date_current_hb (only when is_current_hb_done = '1')
+  SELECT
+    record_id,
+    datetime_entry,
+    'date_current_hb' AS variable,
+    'Future date_current_hb' AS issue,
+    date_current_hb AS current_value
+  FROM maternal_core
+  WHERE date_current_hb IS NOT NULL
+    AND TRIM(date_current_hb) != ''
+    AND is_current_hb_done = '1'
+    AND TRY_CAST(date_current_hb AS DATE) > CURRENT_DATE
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 14:57:54'
+),
+
+
+missing_is_vdrl_test_done AS (
+  -- Missing is_vdrl_test_done
+  SELECT
+    record_id,
+    datetime_entry,
+    'is_vdrl_test_done' AS variable,
+    'Missing is_vdrl_test_done' AS issue,
+    is_vdrl_test_done AS current_value
+  FROM maternal_core
+  WHERE (is_vdrl_test_done IS NULL OR TRIM(is_vdrl_test_done) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+missing_vdrl_test_result AS (
+  -- Missing vdrl_test_result (only when is_vdrl_test_done = '1')
+  SELECT
+    record_id,
+    datetime_entry,
+    'vdrl_test_result' AS variable,
+    'Missing vdrl_test_result (VDRL test done = Yes but no result recorded)' AS issue,
+    vdrl_test_result AS current_value
+  FROM maternal_core
+  WHERE (vdrl_test_result IS NULL OR TRIM(vdrl_test_result) = '')
+    AND is_vdrl_test_done = '1'
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 13:06:33'
+),
+
+
+missing_date_vdrl_test_done AS (
+  -- Missing date_vdrl_test_done (only when is_vdrl_test_done = '1')
+  SELECT
+    record_id,
+    datetime_entry,
+    'date_vdrl_test_done' AS variable,
+    'Missing date_vdrl_test_done (VDRL test done = Yes but no date recorded)' AS issue,
+    date_vdrl_test_done AS current_value
+  FROM maternal_core
+  WHERE (date_vdrl_test_done IS NULL OR TRIM(date_vdrl_test_done) = '')
+    AND is_vdrl_test_done = '1'
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 13:06:33'
+),
+
+future_date_vdrl_test_done AS (
+  -- Future date_vdrl_test_done (only when is_vdrl_test_done = '1')
+  SELECT
+    record_id,
+    datetime_entry,
+    'date_vdrl_test_done' AS variable,
+    'Future date_vdrl_test_done' AS issue,
+    date_vdrl_test_done AS current_value
+  FROM maternal_core
+  WHERE date_vdrl_test_done IS NOT NULL
+    AND TRIM(date_vdrl_test_done) != ''
+    AND is_vdrl_test_done = '1'
+    AND TRY_CAST(date_vdrl_test_done AS DATE) > CURRENT_DATE
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 13:06:33'
+),
+
+
+missing_is_hepatitis_b_test_done AS (
+  -- Missing is_hepatitis_b_test_done
+  SELECT
+    record_id,
+    datetime_entry,
+    'is_hepatitis_b_test_done' AS variable,
+    'Missing is_hepatitis_b_test_done' AS issue,
+    is_hepatitis_b_test_done AS current_value
+  FROM maternal_core
+  WHERE (is_hepatitis_b_test_done IS NULL OR TRIM(is_hepatitis_b_test_done) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+
+missing_hepatitis_b_test_result AS (
+  -- Missing hepatitis_b_test_result (only when is_hepatitis_b_test_done = '1')
+  SELECT
+    record_id,
+    datetime_entry,
+    'hepatitis_b_test_result' AS variable,
+    'Missing hepatitis_b_test_result (Hepatitis B test done = Yes but no result recorded)' AS issue,
+    hepatitis_b_test_result AS current_value
+  FROM maternal_core
+  WHERE (hepatitis_b_test_result IS NULL OR TRIM(hepatitis_b_test_result) = '')
+    AND is_hepatitis_b_test_done = '1'
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 13:06:33'
+),
+
+
+missing_date_hepatitis_b_test_done AS (
+  -- Missing date_hepatitis_b_test_done (only when is_hepatitis_b_test_done = '1')
+  SELECT
+    record_id,
+    datetime_entry,
+    'date_hepatitis_b_test_done' AS variable,
+    'Missing date_hepatitis_b_test_done (Hepatitis B test done = Yes but no date recorded)' AS issue,
+    date_hepatitis_b_test_done AS current_value
+  FROM maternal_core
+  WHERE (date_hepatitis_b_test_done IS NULL OR TRIM(date_hepatitis_b_test_done) = '')
+    AND is_hepatitis_b_test_done = '1'
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 13:06:33'
+),
+
+future_date_hepatitis_b_test_done AS (
+  -- Future date_hepatitis_b_test_done (only when is_hepatitis_b_test_done = '1')
+  SELECT
+    record_id,
+    datetime_entry,
+    'date_hepatitis_b_test_done' AS variable,
+    'Future date_hepatitis_b_test_done' AS issue,
+    date_hepatitis_b_test_done AS current_value
+  FROM maternal_core
+  WHERE date_hepatitis_b_test_done IS NOT NULL
+    AND TRIM(date_hepatitis_b_test_done) != ''
+    AND is_hepatitis_b_test_done = '1'
+    AND TRY_CAST(date_hepatitis_b_test_done AS DATE) > CURRENT_DATE
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 13:06:33'
+),
+
+
+missing_is_ogtt_test_done AS (
+  -- Missing is_ogtt_test_done
+  SELECT
+    record_id,
+    datetime_entry,
+    'is_ogtt_test_done' AS variable,
+    'Missing is_ogtt_test_done' AS issue,
+    is_ogtt_test_done AS current_value
+  FROM maternal_core
+  WHERE (is_ogtt_test_done IS NULL OR TRIM(is_ogtt_test_done) = '')
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-05-02 10:29:25'
+),
+
+
+missing_ogtt_result AS (
+  -- Missing ogtt_result (only when is_ogtt_test_done = '1')
+  SELECT
+    record_id,
+    datetime_entry,
+    'ogtt_result' AS variable,
+    'Missing ogtt_result (OGTT test done = Yes but no result recorded)' AS issue,
+    ogtt_result AS current_value
+  FROM maternal_core
+  WHERE (ogtt_result IS NULL OR TRIM(ogtt_result) = '')
+    AND is_ogtt_test_done = '1'
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-06-17 15:44:37'
+),
+
+invalid_ogtt_result AS (
+  -- ogtt_result out of range (expected 2-30 mmol/L)
+  SELECT
+    record_id,
+    datetime_entry,
+    'ogtt_result' AS variable,
+    'ogtt_result out of range (expected 2-30 mmol/L)' AS issue,
+    ogtt_result AS current_value
+  FROM maternal_core
+  WHERE ogtt_result IS NOT NULL
+    AND TRIM(ogtt_result) != ''
+    AND TRIM(ogtt_result) != 'NI'
+    AND TRIM(ogtt_result) != 'ND'
+    AND is_ogtt_test_done = '1'
+    AND (
+      TRY_CAST(ogtt_result AS DOUBLE) IS NULL
+      OR TRY_CAST(ogtt_result AS DOUBLE) < 2
+      OR TRY_CAST(ogtt_result AS DOUBLE) > 30
+    )
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-06-17 15:44:37'
+),
+
+
+missing_date_ogtt_test_done AS (
+  -- Missing date_ogtt_test_done (only when is_ogtt_test_done = '1')
+  SELECT
+    record_id,
+    datetime_entry,
+    'date_ogtt_test_done' AS variable,
+    'Missing date_ogtt_test_done (OGTT test done = Yes but no date recorded)' AS issue,
+    date_ogtt_test_done AS current_value
+  FROM maternal_core
+  WHERE (date_ogtt_test_done IS NULL OR TRIM(date_ogtt_test_done) = '')
+    AND is_ogtt_test_done = '1'
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-06-17 15:44:37'
+),
+
+future_date_ogtt_test_done AS (
+  -- Future date_ogtt_test_done (only when is_ogtt_test_done = '1')
+  SELECT
+    record_id,
+    datetime_entry,
+    'date_ogtt_test_done' AS variable,
+    'Future date_ogtt_test_done' AS issue,
+    date_ogtt_test_done AS current_value
+  FROM maternal_core
+  WHERE date_ogtt_test_done IS NOT NULL
+    AND TRIM(date_ogtt_test_done) != ''
+    AND is_ogtt_test_done = '1'
+    AND TRY_CAST(date_ogtt_test_done AS DATE) > CURRENT_DATE
+    AND CAST(datetime_entry AS TIMESTAMP) >= '2025-06-17 15:44:37'
+),
+
+
 
 
 
@@ -2364,10 +2956,84 @@ missing_other_complaints_specify AS (
     SELECT * FROM invalid_time_drainage_of_amn_fluid
     UNION ALL
     SELECT * FROM missing_time_drainage_units
-    UNION ALL
-    SELECT * FROM missing_oedema_location_oth
+   -- UNION ALL
+   -- SELECT * FROM missing_oedema_location_oth
     UNION ALL
     SELECT * FROM missing_other_complaints_specify
+    UNION ALL
+    SELECT * FROM missing_hb_booking_level
+    UNION ALL
+    SELECT * FROM invalid_hb_booking_level
+    UNION ALL
+    SELECT * FROM missing_date_booking_hb
+    UNION ALL
+    SELECT * FROM future_date_booking_hb
+    UNION ALL
+    SELECT * FROM date_booking_hb_after_admission
+    UNION ALL
+    SELECT * FROM missing_rbs_current_level
+    UNION ALL
+    SELECT * FROM invalid_rbs_current_level
+    UNION ALL
+    SELECT * FROM missing_platelets_count
+    UNION ALL
+    SELECT * FROM invalid_platelets_count
+    UNION ALL
+    SELECT * FROM missing_wbc_count
+    UNION ALL
+    SELECT * FROM invalid_wbc_count
+    UNION ALL
+    SELECT * FROM missing_is_malaria_rdt
+    UNION ALL
+    SELECT * FROM missing_blood_group_gxm
+    UNION ALL
+    SELECT * FROM missing_blood_group_rh_gxm
+    UNION ALL
+    SELECT * FROM missing_is_anti_d_given
+    UNION ALL
+    SELECT * FROM missing_is_hiv_test_done
+    UNION ALL
+    SELECT * FROM missing_hiv_test_result
+    UNION ALL
+    SELECT * FROM missing_date_hiv_test_done
+    UNION ALL
+    SELECT * FROM future_date_hiv_test_done
+    UNION ALL
+    SELECT * FROM missing_is_current_hb_done
+    UNION ALL
+    SELECT * FROM missing_current_hb
+    UNION ALL
+    SELECT * FROM invalid_current_hb
+    UNION ALL
+    SELECT * FROM missing_date_current_hb
+    UNION ALL
+    SELECT * FROM future_date_current_hb
+    UNION ALL
+    SELECT * FROM missing_is_vdrl_test_done
+    UNION ALL
+    SELECT * FROM missing_vdrl_test_result
+    UNION ALL
+    SELECT * FROM missing_date_vdrl_test_done
+    UNION ALL
+    SELECT * FROM future_date_vdrl_test_done
+    UNION ALL
+    SELECT * FROM missing_is_hepatitis_b_test_done
+    UNION ALL
+    SELECT * FROM missing_hepatitis_b_test_result
+    UNION ALL
+    SELECT * FROM missing_date_hepatitis_b_test_done
+    UNION ALL
+    SELECT * FROM future_date_hepatitis_b_test_done
+    UNION ALL
+    SELECT * FROM missing_is_ogtt_test_done
+    UNION ALL
+    SELECT * FROM missing_ogtt_result
+    UNION ALL
+    SELECT * FROM invalid_ogtt_result
+    UNION ALL
+    SELECT * FROM missing_date_ogtt_test_done
+    UNION ALL
+    SELECT * FROM future_date_ogtt_test_done
 
 
 
